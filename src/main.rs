@@ -1,6 +1,6 @@
 extern crate chrono;
 
-use chrono::prelude::{Date, Local, Datelike};
+use chrono::prelude::{Date, Datelike, Local};
 
 fn main() {
     let now: Date<Local> = Local::now().date();
@@ -8,7 +8,12 @@ fn main() {
     let ord = now.ordinal();
     let year = now.year();
 
-    println!("Today is the {} day of the year {}, or {:#X} in hex.", ordinate(ord), year, ord);
+    println!(
+        "Today is the {} day of the year {}, or {:#X} in hex.",
+        ordinate(ord),
+        year,
+        ord
+    );
 
     if ord == 256 {
         println!("Happy day of the Programmer!");
@@ -21,7 +26,12 @@ fn main() {
 fn ordinate(num: u32) -> String {
     let suff = match num % 100 {
         _a @ 4..=20 => ("th"),
-        dec => { match dec % 10 { 1 => ("st"), 2 => ("nd"), 3 => ("rd"), _ => "th" } }
+        dec => match dec % 10 {
+            1 => ("st"),
+            2 => ("nd"),
+            3 => ("rd"),
+            _ => "th",
+        },
     };
     format!("{}{}", num, suff)
 }
