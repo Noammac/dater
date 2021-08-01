@@ -1,6 +1,7 @@
 extern crate chrono;
 
-use chrono::prelude::{Date, Datelike, Local};
+use std::env;
+use chrono::prelude::{Date, Datelike, Local, TimeZone, NaiveDate};
 
 fn main() {
     let now: Date<Local> = Local::now().date();
@@ -8,11 +9,22 @@ fn main() {
     let ord = now.ordinal();
     let year = now.year();
 
+    let msg: String = match env::var("COUNTDOWN_DATE") {
+        Ok(val) => { 
+            match NaiveDate::parse_from_str(&val, "%F") {
+                Ok(dt) => { format!(" {} days left", (Local.from_utc_date(&dt) - now).num_days()) },
+                Err(_) => { format!(" ERROR: misformatted countdown date {}", val) },
+            }
+        },
+        Err(_) => { String::new() },
+    };
+
     println!(
-        "Today is the {} day of the year {}, or {:#X} in hex.",
+        "Today is the {} day of the year {}, or {:#X} in hex.{}",
         ordinate(ord),
         year,
-        ord
+        ord,
+        msg
     );
 
     if ord == 256 {
