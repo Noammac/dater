@@ -28,7 +28,7 @@ fn main() {
             }
             Err(_) => {
                 format!(
-                    " {bold}ERROR:{reset} misformatted countdown date {date}",
+                    " {bold}ERROR:{reset} misformatted countdown date {date}.",
                     bold = bold,
                     reset = reset,
                     date = val
