@@ -1,7 +1,9 @@
 extern crate chrono;
+extern crate termion;
 
-use chrono::prelude::{Datelike, Date, NaiveDate, TimeZone, Local};
+use chrono::prelude::{Date, Datelike, Local, NaiveDate, TimeZone};
 use std::env;
+use termion::{color, style};
 
 fn main() {
     let now: Date<Local> = Local::now().date();
@@ -12,7 +14,13 @@ fn main() {
     let msg: String = match env::var("COUNTDOWN_DATE") {
         Ok(val) => match NaiveDate::parse_from_str(&val, "%F") {
             Ok(dt) => {
-                format!(" {} days left", (Local.from_utc_date(&dt) - now).num_days())
+                format!(
+                    " {red}{bold}{delta}{reset} days left",
+                    delta = (Local.from_utc_date(&dt) - now).num_days(),
+                    red = color::Fg(color::Red),
+                    bold = style::Bold,
+                    reset = style::Reset
+                )
             }
             Err(_) => {
                 format!(" ERROR: misformatted countdown date {}", val)
